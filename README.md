@@ -42,8 +42,8 @@ Untuk menjawab pertanyaan di atas, saya menggunakan **2 sumber data berbeda** ya
 
 | No | Nama Dataset | Deskripsi | Sumber |
 | :-- | :--- | :--- | :--- |
-| 1. | **`Airline_Delay_Cause.csv`** | Data operasional yang berisi durasi delay dan penyebabnya (Cuaca, Carrier, NAS, dll). | [Bureau of Transportation Statistics](https://www.transtats.bts.gov/) |
-| 2. | **`Routes_and_Fares.csv`** | Data bisnis yang berisi rute, harga tiket (*Fare*), dan volume penumpang. | [Kaggle / US Dept of Transport] |
+| 1. | **`Airline_Delay_Cause.csv`** | Data operasional yang berisi durasi delay dan penyebabnya (Cuaca, Carrier, NAS, dll). | https://www.kaggle.com/datasets/abdelazizel7or/airline-delay-cause |
+| 2. | **`Routes_and_Fares.csv`** | Data bisnis yang berisi rute, harga tiket (*Fare*), dan volume penumpang. | http://kaggle.com/datasets/bhavikjikadara/us-airline-flight-routes-and-fares-1993-2024 |
 
 **Proses Data:**
 Data operasional di-*agregasi* per tahun dan per bandara, lalu di-*join* dengan data bisnis untuk mendapatkan pandangan holistik 360 derajat.
