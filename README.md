@@ -5,6 +5,11 @@
 
 ---
 
+Dashboard
+https://us-airline-analysis-7u8rvx622ugx7ua7m2f5fm.streamlit.app/
+
+---
+
 ## 👨‍💻 Profil Mahasiswa
 **Nama:** Brilly Jalu Kumara Biseka 
 **NIM:** 25917018
