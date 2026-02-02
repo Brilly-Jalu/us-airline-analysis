@@ -7,7 +7,7 @@ import seaborn as sns
 # 1. PAGE CONFIGURATION
 # ===============================
 st.set_page_config(
-    page_title="Strategic Airport Performance Matrix",
+    page_title="Matriks Kinerja Bandara Strategis",
     page_icon="✈️",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -128,14 +128,14 @@ def load_data():
     try:
         df = pd.read_csv("airport_delay_business_v2.csv")
     except FileNotFoundError:
-        st.error("⚠️ Data Source Missing. Please ensure 'airport_delay_business_v2.csv' is in the root directory.")
+        st.error("⚠️ Sumber Data Hilang. Pastikan 'airport_delay_business_v2.csv' ada di direktori root.")
         return pd.DataFrame()
     
     # Feature Engineering for Visuals
     df['Delay_Category'] = pd.cut(
         df['total_delay'], 
         bins=[-1, 500, 1500, 1000000], 
-        labels=['Efficient', 'Moderate', 'Critical']
+        labels=['Efisien', 'Sedang', 'Kritis']
     )
     return df
 
@@ -144,28 +144,28 @@ df = load_data()
 # ===============================
 # 5. SIDEBAR NAVIGATION
 # ===============================
-st.sidebar.markdown(f"<h2 style='color: white;'>✈️ Federal Aviation Admin</h2>", unsafe_allow_html=True)
-st.sidebar.markdown(f"<p style='color: #CCCCCC; font-size: 12px; margin-top: -15px;'>Office of Airport Intelligence</p>", unsafe_allow_html=True)
+st.sidebar.markdown(f"<h2 style='color: white;'>✈️ Administrasi Penerbangan Federal</h2>", unsafe_allow_html=True)
+st.sidebar.markdown(f"<p style='color: #CCCCCC; font-size: 12px; margin-top: -15px;'>Kantor Intelijen Bandara</p>", unsafe_allow_html=True)
 
-st.sidebar.markdown("### 🧭 Strategic Modules")
+st.sidebar.markdown("### 🧭 Modul Strategis")
 selected_view = st.sidebar.radio(
-    "Navigation",
+    "Navigasi",
     options=[
-        "📊 Operational Benchmarks", 
-        "💵 Cost-Efficiency Matrix", 
-        "🌦️ Root Cause Analysis",
-        "📈 Volume & Capacity Trends"
+        "📊 Benchmark Operasional", 
+        "💵 Matriks Efisiensi Biaya", 
+        "🌦️ Analisis Akar Penyebab",
+        "📈 Tren Volume & Kapasitas"
     ],
     label_visibility="collapsed"
 )
 st.sidebar.divider()
 
 # --- FILTER SECTION ---
-st.sidebar.markdown("### 🎚️ Cohort Segmentation")
+st.sidebar.markdown("### 🎚️ Segmentasi Kohort")
 
 # Year Filter
 available_years = sorted(df['year'].unique())
-selected_year = st.sidebar.select_slider("Fiscal Year", options=available_years, value=available_years[-1])
+selected_year = st.sidebar.select_slider("Tahun Fiskal", options=available_years, value=available_years[-1])
 
 # Passenger Volume Filter (Safe Handling)
 df_clean_passengers = df.dropna(subset=['total_passengers'])
@@ -175,7 +175,7 @@ else:
     min_p, max_p = 0, 0
 
 passenger_range = st.sidebar.slider(
-    "Passenger Volume",
+    "Volume Penumpang",
     min_value=min_p,
     max_value=max_p,
     value=(min_p, max_p),
@@ -195,47 +195,47 @@ df_filtered = df[
 
 
 if df_filtered.empty:
-    st.warning("⚠️ No data available for the selected filters. Please adjust the Passenger Volume range.")
+    st.warning("⚠️ Tidak ada data tersedia untuk filter yang dipilih. Silakan sesuaikan rentang Volume Penumpang.")
 else:
     # --- HEADER ---
     c_title, c_logo = st.columns([5,1])
     with c_title:
-        st.markdown(f"<h1 style='margin-bottom:0;'>🇺🇸 Strategic Airport Performance Matrix</h1>", unsafe_allow_html=True)
-        st.markdown(f"<p style='color:{SECONDARY}; font-weight:600; font-size: 1.1em;'>Operational Intelligence Briefing: FY {selected_year}</p>", unsafe_allow_html=True)
-        st.markdown("*Confidential briefing regarding operational delays, passenger volume, and ticket pricing efficiency.*")
+        st.markdown(f"<h1 style='margin-bottom:0;'>🇮🇩 Matriks Kinerja Bandara Strategis</h1>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color:{SECONDARY}; font-weight:600; font-size: 1.1em;'>Briefing Intelijen Operasional: TF {selected_year}</p>", unsafe_allow_html=True)
+        st.markdown("*Briefing rahasia mengenai keterlambatan operasional, volume penumpang, dan efisiensi harga tiket.*")
 
     # --- KPI METRICS ---
-    st.markdown("### 📊 National KPIs")
+    st.markdown("### 📊 KPI Nasional")
     m1, m2, m3, m4 = st.columns(4)
 
     # Global Baseline for Deltas
     avg_delay_national = df['total_delay'].mean()
     curr_delay_avg = df_filtered['total_delay'].mean()
     
-    with m1: st.metric("Monitored Airports", f"{len(df_filtered)}")
+    with m1: st.metric("Bandara Dipantau", f"{len(df_filtered)}")
     with m2: 
         st.metric(
-            "Avg Total Delay", 
+            "Rata-rata Total Delay", 
             f"{curr_delay_avg:,.0f} min", 
             delta=f"{curr_delay_avg - avg_delay_national:,.0f} vs Baseline", 
             delta_color="inverse"
         )
-    with m3: st.metric("Avg Ticket Fare", f"${df_filtered['avg_fare'].mean():,.2f}")
-    with m4: st.metric("Passengers Processed", f"{df_filtered['total_passengers'].sum()/1e6:.1f} M")
+    with m3: st.metric("Rata-rata Harga Tiket", f"${df_filtered['avg_fare'].mean():,.2f}")
+    with m4: st.metric("Penumpang Diproses", f"{df_filtered['total_passengers'].sum()/1e6:.1f} M")
 
     st.markdown("---")
 
     # ==========================
     # MODULE 1: BENCHMARKS
     # ==========================
-    if selected_view == "📊 Operational Benchmarks":
-        st.subheader("📊 Strategic Benchmarks & Rankings")
-        st.markdown("**Executive Summary:** Comparative analysis of airport efficiency. Green indicates high performance (low delay).")
+    if selected_view == "📊 Benchmark Operasional":
+        st.subheader("📊 Benchmark Strategis & Peringkat")
+        st.markdown("**Ringkasan Eksekutif:** Analisis komparatif efisiensi bandara. Hijau menunjukkan kinerja tinggi (delay rendah).")
 
-        tab1, tab2, tab3 = st.tabs(["🏆 High Efficiency", "⚠️ Critical Delay Hubs", "💰 High Cost Hubs"])
+        tab1, tab2, tab3 = st.tabs(["🏆 Efisiensi Tinggi", "⚠️ Hub Delay Kritis", "💰 Hub Biaya Tinggi"])
         
         with tab1:
-            st.markdown("##### 🏆 Top 10 Most Efficient Airports (Low Delay)")
+            st.markdown("##### 🏆 10 Bandara Paling Efisien (Delay Rendah)")
             st.dataframe(
                 df_filtered[['airport', 'total_delay', 'total_passengers']].sort_values('total_delay').head(10)
                 .style.format({"total_delay": "{:,.0f}", "total_passengers": "{:,.0f}"})
@@ -244,7 +244,7 @@ else:
             )
             
         with tab2:
-            st.markdown("##### ⚠️ Top 10 Critical Delay Hubs")
+            st.markdown("##### ⚠️ 10 Hub Delay Kritis")
             st.dataframe(
                 df_filtered[['airport', 'total_delay', 'carrier_delay', 'weather_delay']].sort_values('total_delay', ascending=False).head(10)
                 .style.format({"total_delay": "{:,.0f}", "carrier_delay": "{:,.0f}"})
@@ -253,7 +253,7 @@ else:
             )
             
         with tab3:
-            st.markdown("##### 💰 Top 10 Most Expensive Airports")
+            st.markdown("##### 💰 10 Bandara Paling Mahal")
             st.dataframe(
                 df_filtered[['airport', 'avg_fare', 'total_delay']].dropna(subset=['avg_fare']).sort_values('avg_fare', ascending=False).head(10)
                 .style.format({"avg_fare": "${:.2f}", "total_delay": "{:,.0f}"})
@@ -265,24 +265,24 @@ else:
         st.markdown("---")
         c1, c2 = st.columns(2)
         with c1:
-            st.markdown("#### Delay Distribution Profile")
+            st.markdown("#### Profil Distribusi Delay")
             fig, ax = plt.subplots(figsize=(8, 4))
             sns.histplot(df_filtered['total_delay'], kde=True, color=PRIMARY, ax=ax)
-            ax.set_xlabel("Total Delay (Minutes)")
+            ax.set_xlabel("Total Delay (Menit)")
             st.pyplot(fig, use_container_width=True)
         with c2:
-            st.markdown("#### Fare vs. Delay Correlation")
+            st.markdown("#### Korelasi Harga vs. Delay")
             fig, ax = plt.subplots(figsize=(8, 4))
-            sns.scatterplot(data=df_filtered, x='avg_fare', y='total_delay', hue='Delay_Category', palette={'Efficient': SUCCESS, 'Moderate': SECONDARY, 'Critical': DANGER}, ax=ax)
-            ax.set_xlabel("Average Fare ($)")
+            sns.scatterplot(data=df_filtered, x='avg_fare', y='total_delay', hue='Delay_Category', palette={'Efisien': SUCCESS, 'Sedang': SECONDARY, 'Kritis': DANGER}, ax=ax)
+            ax.set_xlabel("Rata-rata Harga Tiket ($)")
             st.pyplot(fig, use_container_width=True)
 
     # ==========================
     # MODULE 2: COST EFFICIENCY
     # ==========================
-    elif selected_view == "💵 Cost-Efficiency Matrix":
-        st.subheader("💵 Cost-Benefit Matrix")
-        st.info("💡 **Strategic Directive:** Identify 'High-Value' airports that deliver low delays despite high passenger volume or reasonable costs.")
+    elif selected_view == "💵 Matriks Efisiensi Biaya":
+        st.subheader("💵 Matriks Manfaat Biaya")
+        st.info("💡 **Arahan Strategis:** Identifikasi bandara 'Bernilai Tinggi' yang memberikan delay rendah meskipun volume penumpang tinggi atau biaya wajar.")
 
         df_scatter = df_filtered.dropna(subset=['avg_fare', 'total_delay', 'total_passengers'])
         
@@ -299,62 +299,62 @@ else:
             ax3.axvline(df_scatter["avg_fare"].mean(), color='gray', linestyle='--', alpha=0.5)
             ax3.axhline(df_scatter["total_delay"].mean(), color='gray', linestyle='--', alpha=0.5)
             
-            ax3.text(df_scatter["avg_fare"].max(), df_scatter["total_delay"].max(), "⚠️ POOR VALUE\n(High Cost, High Delay)", ha='right', color=DANGER, fontweight='bold')
-            ax3.text(df_scatter["avg_fare"].min(), df_scatter["total_delay"].min(), "✅ BEST VALUE\n(Low Cost, Low Delay)", ha='left', color=SUCCESS, fontweight='bold')
+            ax3.text(df_scatter["avg_fare"].max(), df_scatter["total_delay"].max(), "⚠️ NILAI BURUK\n(Biaya Tinggi, Delay Tinggi)", ha='right', color=DANGER, fontweight='bold')
+            ax3.text(df_scatter["avg_fare"].min(), df_scatter["total_delay"].min(), "✅ NILAI TERBAIK\n(Biaya Rendah, Delay Rendah)", ha='left', color=SUCCESS, fontweight='bold')
             
-            ax3.set_xlabel("Average Ticket Fare ($)")
-            ax3.set_ylabel("Total Delay Minutes")
-            ax3.set_title("Bubble Size = Passenger Volume")
-            plt.colorbar(scatter, ax=ax3, label='Passenger Volume')
+            ax3.set_xlabel("Rata-rata Harga Tiket ($)")
+            ax3.set_ylabel("Total Delay (Menit)")
+            ax3.set_title("Ukuran Bubble = Volume Penumpang")
+            plt.colorbar(scatter, ax=ax3, label='Volume Penumpang')
             st.pyplot(fig3, use_container_width=True)
 
     # ==========================
     # MODULE 3: ROOT CAUSE
     # ==========================
-    elif selected_view == "🌦️ Root Cause Analysis":
-        st.subheader("🌦️ Delay Root Cause Decomposition")
+    elif selected_view == "🌦️ Analisis Akar Penyebab":
+        st.subheader("🌦️ Dekomposisi Akar Penyebab Delay")
         
         causes = df_filtered[['carrier_delay', 'weather_delay', 'nas_delay', 'late_aircraft_delay']].sum()
         
         col_a, col_b = st.columns([1, 1])
         with col_a:
             fig4, ax4 = plt.subplots(figsize=(6, 6))
-            ax4.pie(causes, labels=['Carrier', 'Weather', 'NAS', 'Late Aircraft'], autopct='%1.1f%%', colors=[PRIMARY, SECONDARY, ACCENT, "#95A5A6"], wedgeprops={'edgecolor': 'white'})
-            ax4.set_title(f"Delay Composition (FY {selected_year})")
+            ax4.pie(causes, labels=['Maskapai', 'Cuaca', 'NAS', 'Pesawat Terlambat'], autopct='%1.1f%%', colors=[PRIMARY, SECONDARY, ACCENT, "#95A5A6"], wedgeprops={'edgecolor': 'white'}, textprops={'color': 'black'})
+            ax4.set_title(f"Komposisi Delay (TF {selected_year})")
             st.pyplot(fig4, use_container_width=True)
         with col_b:
-            st.markdown("#### 💡 Insight Breakdown")
+            st.markdown("#### 💡 Analisis Insight")
             dominant = causes.idxmax().replace('_delay', '').upper()
-            st.metric("Dominant Risk Factor", dominant, "Requires Mitigation")
-            st.dataframe(causes.rename("Total Minutes"), use_container_width=True)
+            st.metric("Faktor Risiko Dominan", dominant, "Memerlukan Mitigasi")
+            st.dataframe(causes.rename("Total Menit"), use_container_width=True)
 
     # ==========================
     # MODULE 4: VOLUME TRENDS (FIXED)
     # ==========================
-    elif selected_view == "📈 Volume & Capacity Trends":
-        st.subheader("📈 Volume & Capacity Stress Test")
-        st.markdown("**Objective:** Assess if airport infrastructure (passenger volume) is the primary driver of operational failure (delays).")
+    elif selected_view == "📈 Tren Volume & Kapasitas":
+        st.subheader("📈 Tes Stress Volume & Kapasitas")
+        st.markdown("**Objektif:** Menilai apakah infrastruktur bandara (volume penumpang) adalah pendorong utama dari kegagalan operasional (delay).")
 
         # Clean Data for Analysis
         df_vol = df_filtered.dropna(subset=['total_passengers', 'total_delay'])
 
         if df_vol.empty:
-            st.warning("Insufficient data for Volume Analysis.")
+            st.warning("Data tidak cukup untuk Analisis Volume.")
         else:
             # 1. Regression Plot
-            st.markdown("#### 1. Correlation: Volume vs. Delays")
+            st.markdown("#### 1. Korelasi: Volume vs. Delays")
             fig5, ax5 = plt.subplots(figsize=(10, 4))
             sns.regplot(x="total_passengers", y="total_delay", data=df_vol, 
                         scatter_kws={'alpha':0.5, 'color': PRIMARY}, line_kws={'color': DANGER}, ax=ax5)
-            ax5.set_xlabel("Total Passengers (Throughput)")
-            ax5.set_ylabel("Total Delay (Minutes)")
+            ax5.set_xlabel("Total Penumpang (Throughput)")
+            ax5.set_ylabel("Total Delay (Menit)")
             ax5.grid(True, alpha=0.2)
             st.pyplot(fig5, use_container_width=True)
 
             # 2. Top Busiest Hubs Status (FIXED & STYLED)
             st.markdown("---")
-            st.markdown("#### 2. Top 5 Busiest Airports: Performance Check")
-            st.caption("Are the biggest airports also the worst performers? Red bars indicate delays exceeding national average.")
+            st.markdown("#### 2. Top 5 Bandara Tersibuk: Cek Kinerja")
+            st.caption("Apakah bandara terbesar juga yang terburuk kinerjanya? Batang merah menunjukkan delay melebihi rata-rata nasional.")
             
             # Get Top 5 Busiest
             top_5_busy = df_vol.sort_values("total_passengers", ascending=False).head(5)
@@ -374,17 +374,17 @@ else:
                 )
                 
                 # Garis Rata-rata Nasional
-                ax6.axhline(avg_delay_national, color=PRIMARY, linestyle="--", linewidth=2, label=f"National Avg: {avg_delay_national:,.0f} min")
+                ax6.axhline(avg_delay_national, color=PRIMARY, linestyle="--", linewidth=2, label=f"Rata-rata Nasional: {avg_delay_national:,.0f} min")
                 
                 # Labels
-                ax6.set_xlabel("Airport Code")
-                ax6.set_ylabel("Accumulated Delay (Minutes)")
+                ax6.set_xlabel("Kode Bandara")
+                ax6.set_ylabel("Delay Akumulatif (Menit)")
                 ax6.legend()
                 ax6.grid(axis='y', linestyle=':', alpha=0.3)
                 
                 st.pyplot(fig6, use_container_width=True)
             else:
-                st.info("No data available for top airports.")
+                st.info("Tidak ada data tersedia untuk bandara teratas.")
 
 # ===============================
 # FOOTER
@@ -393,8 +393,8 @@ st.markdown("---")
 st.markdown(
     f"""
     <div style='text-align: center; color: #888; font-size: 12px;'>
-        &copy; 2026 Federal Aviation Administration | Office of Data Strategy <br>
-        <span style='color:{SECONDARY};'>Data Source: Bureau of Transportation Statistics (BTS)</span>
+        &copy; 2026 Administrasi Penerbangan Federal | Kantor Strategi Data <br>
+        <span style='color:{SECONDARY};'>Sumber Data: Biro Statistik Transportasi (BTS)</span>
     </div>
     """, 
     unsafe_allow_html=True
