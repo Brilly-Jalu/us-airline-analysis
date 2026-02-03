@@ -200,7 +200,7 @@ else:
     # --- HEADER ---
     c_title, c_logo = st.columns([5,1])
     with c_title:
-        st.markdown(f"<h1 style='margin-bottom:0;'>🇮🇩 Matriks Kinerja Bandara Strategis</h1>", unsafe_allow_html=True)
+        st.markdown(f"<h1 style='margin-bottom:0;'>Matriks Kinerja Bandara Strategis</h1>", unsafe_allow_html=True)
         st.markdown(f"<p style='color:{SECONDARY}; font-weight:600; font-size: 1.1em;'>Briefing Intelijen Operasional: TF {selected_year}</p>", unsafe_allow_html=True)
         st.markdown("*Briefing rahasia mengenai keterlambatan operasional, volume penumpang, dan efisiensi harga tiket.*")
 
@@ -398,4 +398,5 @@ st.markdown(
     </div>
     """, 
     unsafe_allow_html=True
+
 )
